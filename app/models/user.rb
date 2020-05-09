@@ -75,6 +75,17 @@ class User < ApplicationRecord
   self.prefecture_code = JpPrefecture::Prefecture.find(name: prefecture_name).code
   end
 
+  def address
+    prefecture = self.prefecture_name
+    city = self.city
+    street = self.street
+    user_address = "#{ prefecture + city + street }"
+    return user_address
+  end
+
+  geocoded_by :address  #←addressメソッド
+  after_validation :geocode
+
   #バリデーションは該当するモデルに設定する。エラーにする条件を設定できる。
   validates :name, length: {maximum: 20, minimum: 2}
   validates :introduction, length: {maximum: 50}
